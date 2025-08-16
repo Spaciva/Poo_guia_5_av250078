@@ -25,7 +25,7 @@ public class frmBotonesRadio extends JFrame {
            @Override
            public void actionPerformed(ActionEvent e) {
                lblImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/interfacesswing/recursos/img1.jpeg")));
-               
+
 
            }
        });
