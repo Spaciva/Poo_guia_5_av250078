@@ -4,11 +4,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class frmPersona extends JFrame{
     private DefaultTableModel modelo;
+    //VARIABLES PARA LEER EL CSV
+    private BufferedReader lector;
+   /* private String linea;
+    private String parte[]=null;*///almacena cada linea leida
+
+
+
+
+
+
+
 
     private JPanel pnlPersona;
     private JTextField txtId;
@@ -28,17 +42,31 @@ public class frmPersona extends JFrame{
         this.setContentPane(pnlPersona);
         this.setMinimumSize(new Dimension(600, 500));
         this.setLocationRelativeTo(getParent());
-//Arreglo de objeto, para inicializar con vacio la tabla
+                          //Arreglo de objeto, para inicializar con vacio la tabla
         Object [][] data=null;
-//Arreglo de String para crear los nombres de las columnas
+                          //Arreglo de String para crear los nombres de las columnas
         String[] colums= {
                 "Id", "Nombres", "Edad","Telefono", "Sexo"
         };
+
+
+
+
 //Instancia del modelo
         modelo= new DefaultTableModel(data, colums);
+
+
+
+// Cargar datos desde CSV
+
+
+
+
 //Seteo del modelo, el cual tendra la estructura que permitira
 // a la tabla representar los datos
         tblDatos.setModel(modelo);
+        leercsv();
+
         btnObtenerDatos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -80,6 +108,41 @@ public class frmPersona extends JFrame{
 
 
     }
+     private void leercsv(){
+
+             File archivo = new File("src/datos/persona.csv");
+
+
+             try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+                 String linea;
+                 boolean primera = true;
+              //leer linea por linea hasta que no se encuentren mas
+                 while ((linea = br.readLine()) != null) {
+                     //la primera no se leera
+                     if (primera) {
+                         primera = false; // Saltar encabezado
+                         continue;
+                     }
+                  // Dividimos la línea en partes usando la coma como separador
+                     String[] datos = linea.split(",");
+                     if (datos.length == 5) {
+                         Object[] fila = {datos[0], datos[1], datos[2], datos[3], datos[4]};
+                         modelo.addRow(fila);
+                     }
+                 }
+             } catch (Exception e) {
+                 JOptionPane.showMessageDialog(null, "Error al leer el archivo CSV:\n" + e.getMessage());
+             }
+
+
+
+
+
+
+
+
+     }
+
     private void btnLimpiar() {
         //borra contenido actual de los controles del form
         txtId.setText("");
